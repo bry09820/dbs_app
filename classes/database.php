@@ -55,4 +55,46 @@ class database {
  
     return false;
  }
+
+    function addStudent($firstname, $lastname, $email, $admin_id) {
+        $con = $this->opencon();
+ 
+        try {
+            $con->beginTransaction();
+ 
+            $stmt = $con->prepare("INSERT INTO students (student_FN, student_LN,  student_email, admin_id) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$firstname, $lastname, $email, $admin_id]);
+ 
+            $userId = $con->lastInsertId();
+            $con->commit();
+ 
+            return $userId;
+        } catch (PDOException $e) {
+            $con->rollBack();
+            return false;
+        }
+    }
+
+ function addCourse($course_name, $admin_id) {
+        $con = $this->opencon();
+ 
+        try {
+            $con->beginTransaction();
+ 
+            $stmt = $con->prepare("INSERT INTO courses (course_name,  admin_id) VALUES (?, ?)");
+            $stmt->execute([$course_name, $admin_id]);
+ 
+            $userId = $con->lastInsertId();
+            $con->commit();
+ 
+            return $userId;
+        } catch (PDOException $e) {
+            $con->rollBack();
+            return false;
+        }
+    }
+
+
+
+
 }
