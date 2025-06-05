@@ -92,9 +92,35 @@ class database {
             $con->rollBack();
             return false;
         }
-    }
-
-
 
 
 }
+  function getStudent()
+  {
+    $con = $this->opencon();
+    return $con->query("SELECT * FROM students")->fetchAll();
+  }
+  function getsStudentByID($student_id){
+    $con = $this->opencon();
+    $stmt = $con->prepare("SELECT * FROM students WHERE student_id = ?");
+    $stmt->execute([$student_id]);
+    return $stmt->fetch(PDO:: FETCH_ASSOC);
+  }
+  function updateStudent ($firstname, $lastname, $email, $student_id){
+    try{
+$con = $this->opencon();
+$con->beginTransaction();
+$query = $con->prepare("UPDATE students SET student_FN = ?, student_LN = ?, student_email = ? WHERE student_id = ?");
+$query->execute([$firstname, $lastname, $email, $student_id]);
+
+$con->commit();
+
+return true;
+  } catch (PDOExeption $e){
+    $con->rollback();
+    return false;
+    
+  }
+}
+}
+?>
